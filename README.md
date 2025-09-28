@@ -4,6 +4,9 @@ This repository contains a **Small Language Model (SLM)** built entirely from sc
 This isn’t about creating the next ChatGPT — it’s a **deep dive project** to demystify the **core components** of modern language models.  
 Inside, you’ll find a **decoder-only Transformer**, trained on a custom corpus of AI theory papers, built step by step to understand the technology powering today’s AI revolution.  
 
+![Output](/output.png)
+
+
 ---
 
 ##  Features  
