@@ -1,17 +1,17 @@
 import torch
 import torch.nn.functional as F
 from model import SLM, ModelConfig
+from tokenizers import Tokenizer
 
 # --- Hyperparameters ---
 BATCH_SIZE = 32
 LEARNING_RATE = 1e-3
-MAX_ITERS = 500
+MAX_ITERS = 500 # Let's train a bit longer for a better result
 EVAL_INTERVAL = 100
-LOG_INTERVAL = 10  # NEW: Print training loss every 10 steps
+LOG_INTERVAL = 10
 
 config = ModelConfig()
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
 
 data = torch.load('data.pt')
 n = int(0.9 * len(data))
@@ -41,6 +41,7 @@ def estimate_loss():
     model.train()
     return out
 
+# --- Main training script ---
 if __name__ == '__main__':
     model = SLM(config).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=LEARNING_RATE)
@@ -50,38 +51,16 @@ if __name__ == '__main__':
         if step % EVAL_INTERVAL == 0 and step > 0:
             losses = estimate_loss()
             print(f"---- Step {step}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f} ----")
-
         xb, yb = get_batch('train')
         logits = model(xb)
         loss = F.cross_entropy(logits.view(-1, config.vocab_size), yb.view(-1))
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
         optimizer.step()
-        
-        # NEW: Log the training loss for the current batch
         if step % LOG_INTERVAL == 0:
             print(f"Step {step}: batch train loss {loss.item():.4f}")
 
-    # Final evaluation after training
-    losses = estimate_loss()
-    print(f"---- Final: train loss {losses['train']:.4f}, val loss {losses['val']:.4f} ----")
-
-from tokenizers import Tokenizer
-
-
-tokenizer = Tokenizer.from_file("tokenizer.json")
-
-
-prompt = "what is ai?"
-
-start_ids = tokenizer.encode(prompt).ids
-start_tensor = torch.tensor(start_ids, dtype=torch.long, device=device).unsqueeze(0)
-
-print("\nGenerating text...")
-model.eval()
-with torch.no_grad():
-    generated_ids = model.generate(start_tensor, max_new_tokens=100)[0].tolist()
-
-
-generated_text = tokenizer.decode(generated_ids)
-print(generated_text)
+    # --- NEW: SAVE THE MODEL'S WEIGHTS ---
+    MODEL_SAVE_PATH = "slm_model.pth"
+    print(f"\nTraining finished! Saving model to {MODEL_SAVE_PATH}")
+    torch.save(model.state_dict(), MODEL_SAVE_PATH)
