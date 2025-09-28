@@ -22,17 +22,7 @@ Inside, you’ll find a **decoder-only Transformer**, trained on a custom corpus
   - Cross-entropy loss  
   - Validation loop for overfitting checks  
   - GPU acceleration (CUDA)  
-- **Autoregressive Text Generation**: Generate new text from a prompt.  
-
----
-
-##  Skills Demonstrated  
-- **PyTorch Proficiency**: Custom `nn.Module`, tensors, training loops.  
-- **NLP Fundamentals**: Tokenization, embeddings, language modeling.  
-- **Transformer Architecture**: Hands-on implementation of self-attention & residuals.  
-- **Data Engineering**: Cleaning, corpus prep, tokenization pipeline.  
-- **Software Best Practices**: Organized modules, venvs, dependencies, docs.  
-- **GPU Computing**: CUDA acceleration & device management.  
+- **Autoregressive Text Generation**: Generate new text from a prompt.   
 
 ---
 
@@ -40,8 +30,6 @@ Inside, you’ll find a **decoder-only Transformer**, trained on a custom corpus
 - **Tokenizer**: BPE → robust subword representation.  
 - **Architecture**: Decoder-only Transformer → GPT-like autoregressive text gen.  
 - **Optimizer**: AdamW → better generalization than Adam/SGD.  
-
----
 
 ---
 
